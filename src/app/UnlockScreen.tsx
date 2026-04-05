@@ -6,7 +6,7 @@ export function UnlockScreen() {
   const { unlock, unlockBusy, hasExistingJournal, state } = useApp()
 
   return (
-    <AppShell className="items-center justify-center py-8">
+    <AppShell className="min-h-0 flex-1 items-center justify-center overflow-y-auto py-8">
       <UnlockForm
         onSubmit={unlock}
         error={state.unlockError}

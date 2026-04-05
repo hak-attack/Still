@@ -67,8 +67,8 @@ export function SettingsPanel() {
   }
 
   return (
-    <AppShell>
-      <header className="mb-8 flex items-center gap-3">
+    <AppShell className="h-full min-h-0 flex-1 flex-col overflow-hidden">
+      <header className="mb-6 flex shrink-0 items-center gap-3 sm:mb-8">
         <button
           type="button"
           onClick={() => navigateHash('journal')}
@@ -90,7 +90,8 @@ export function SettingsPanel() {
         </h1>
       </header>
 
-      <div className="space-y-10">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+        <div className="space-y-10 pb-6">
         <section className="space-y-3">
           <h2 className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--still-muted)]">
             Appearance
@@ -169,6 +170,7 @@ export function SettingsPanel() {
           <p>Local, encrypted journaling. No accounts, no cloud.</p>
           <p className="text-xs">v0.1.0</p>
         </section>
+        </div>
       </div>
 
       {importOpen ? (

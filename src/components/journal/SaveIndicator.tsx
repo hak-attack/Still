@@ -1,9 +1,9 @@
 import { cn } from '../../lib/utils/cn'
 
-type Status = 'idle' | 'saving' | 'saved'
+export type SaveStatus = 'idle' | 'saving' | 'saved'
 
 type Props = {
-  status: Status
+  status: SaveStatus
   className?: string
 }
 
@@ -13,7 +13,7 @@ export function SaveIndicator({ status, className }: Props) {
   return (
     <p
       className={cn(
-        'min-h-[1.25rem] text-xs tracking-wide text-[var(--still-muted)] transition-opacity',
+        'block min-h-[1.25rem] whitespace-nowrap text-left text-xs tracking-wide text-[var(--still-muted)] transition-opacity',
         status === 'idle' && 'opacity-0',
         className,
       )}

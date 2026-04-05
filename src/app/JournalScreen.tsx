@@ -2,11 +2,14 @@ import { useMemo, useRef, useState } from 'react'
 import { CalendarSheet } from '../components/calendar/CalendarSheet'
 import { DateHeader } from '../components/journal/DateHeader'
 import { EntryEditor } from '../components/journal/EntryEditor'
-import { SaveIndicator } from '../components/journal/SaveIndicator'
+import { JournalDock } from '../components/journal/JournalDock'
 import { AppShell } from '../components/layout/AppShell'
-import { IconButton } from '../components/ui/IconButton'
 import { navigateHash } from './hashRoute'
 import { useApp } from './providers'
+
+/** Space for floating dock + safe area so content clears the bar */
+const DOCK_BOTTOM_PAD =
+  'pb-[calc(5.75rem+env(safe-area-inset-bottom,0px))] sm:pb-[calc(6rem+env(safe-area-inset-bottom,0px))]'
 
 export function JournalScreen() {
   const { state, goPrevDay, goNextDay, setCurrentDate, updateEntryContent, flushSave } = useApp()
@@ -53,44 +56,23 @@ export function JournalScreen() {
   }
 
   return (
-    <AppShell className="relative min-h-0 flex-1 flex-col">
-      <div className="mb-1.5 flex shrink-0 items-start justify-between gap-2 sm:mb-2">
-        <SaveIndicator status={state.saveStatus} className="pt-1" />
-        <div className="flex shrink-0 gap-0.5">
-          <IconButton
-            label="Open calendar"
-            onClick={() => setCalendarOpen(true)}
-            className="h-10 w-10 sm:h-11 sm:w-11"
-          >
-            <CalendarIcon />
-          </IconButton>
-          <IconButton
-            label="Settings"
-            onClick={() => navigateHash('settings')}
-            className="h-10 w-10 sm:h-11 sm:w-11"
-          >
-            <GearIcon />
-          </IconButton>
-        </div>
-      </div>
-
+    <AppShell className="relative min-h-0 flex-1 flex-col overflow-hidden">
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain">
         <article
           key={dateKey}
-          className="page-enter flex min-h-full min-w-0 flex-col gap-5 pb-[max(1rem,env(safe-area-inset-bottom))] sm:gap-6 sm:pb-8"
+          className={`page-enter flex min-w-0 flex-col gap-5 ${DOCK_BOTTOM_PAD} sm:gap-6`}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
           <DateHeader dateKey={dateKey} className="shrink-0" />
 
-          <div className="still-editor-rail flex min-h-0 flex-1 flex-col pl-3 sm:pl-5">
+          <div className="still-editor-rail shrink-0 pl-3 sm:pl-5">
             <EntryEditor
               value={content}
               onChange={(v) => updateEntryContent(dateKey, v)}
               onBlur={() => void flushSave()}
               placeholder="What’s on your mind today?"
             />
-            <div className="min-h-0 flex-1" aria-hidden />
           </div>
 
           {onThisDay.length > 0 ? (
@@ -117,6 +99,12 @@ export function JournalScreen() {
         </article>
       </div>
 
+      <JournalDock
+        saveStatus={state.saveStatus}
+        onOpenCalendar={() => setCalendarOpen(true)}
+        onOpenSettings={() => navigateHash('settings')}
+      />
+
       <CalendarSheet
         key={calendarOpen ? dateKey : 'calendar-idle'}
         open={calendarOpen}
@@ -126,28 +114,5 @@ export function JournalScreen() {
         store={store}
       />
     </AppShell>
-  )
-}
-
-function CalendarIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function GearIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
   )
 }
