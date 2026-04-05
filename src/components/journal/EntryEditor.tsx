@@ -15,9 +15,10 @@ export function EntryEditor({ value, onChange, onBlur, placeholder, className }:
       onChange={(e) => onChange(e.target.value)}
       onBlur={onBlur}
       placeholder={placeholder}
-      rows={12}
+      rows={1}
       className={cn(
-        'min-h-[50dvh] w-full resize-none bg-transparent text-[1.08rem] leading-[1.72] text-[var(--still-text)]',
+        'still-editor-textarea w-full resize-none bg-transparent text-[1.08rem] leading-[1.72] text-[var(--still-text)]',
+        'min-h-[5.25rem] [field-sizing:content]',
         'placeholder:text-[var(--still-muted)]/70 placeholder:italic',
         'focus:outline-none',
         className,

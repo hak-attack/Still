@@ -2,7 +2,6 @@ import { useMemo, useRef, useState } from 'react'
 import { CalendarSheet } from '../components/calendar/CalendarSheet'
 import { DateHeader } from '../components/journal/DateHeader'
 import { EntryEditor } from '../components/journal/EntryEditor'
-import { JournalPager } from '../components/journal/JournalPager'
 import { SaveIndicator } from '../components/journal/SaveIndicator'
 import { AppShell } from '../components/layout/AppShell'
 import { IconButton } from '../components/ui/IconButton'
@@ -10,14 +9,7 @@ import { navigateHash } from './hashRoute'
 import { useApp } from './providers'
 
 export function JournalScreen() {
-  const {
-    state,
-    goPrevDay,
-    goNextDay,
-    setCurrentDate,
-    updateEntryContent,
-    flushSave,
-  } = useApp()
+  const { state, goPrevDay, goNextDay, setCurrentDate, updateEntryContent, flushSave } = useApp()
   const [calendarOpen, setCalendarOpen] = useState(false)
   const touchRef = useRef<{ x: number; t: number } | null>(null)
 
@@ -61,8 +53,8 @@ export function JournalScreen() {
   }
 
   return (
-    <AppShell className="relative">
-      <div className="mb-1.5 flex items-start justify-between gap-2 sm:mb-2">
+    <AppShell className="relative min-h-0 flex-1 flex-col">
+      <div className="mb-1.5 flex shrink-0 items-start justify-between gap-2 sm:mb-2">
         <SaveIndicator status={state.saveStatus} className="pt-1" />
         <div className="flex shrink-0 gap-0.5">
           <IconButton
@@ -82,26 +74,27 @@ export function JournalScreen() {
         </div>
       </div>
 
-      <JournalPager onPrev={() => void goPrevDay()} onNext={() => void goNextDay()}>
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain">
         <article
           key={dateKey}
-          className="page-enter space-y-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:space-y-6 sm:pb-10"
+          className="page-enter flex min-h-full min-w-0 flex-col gap-5 pb-[max(1rem,env(safe-area-inset-bottom))] sm:gap-6 sm:pb-8"
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
-          <DateHeader dateKey={dateKey} />
+          <DateHeader dateKey={dateKey} className="shrink-0" />
 
-          <div className="still-editor-rail relative pl-3 sm:pl-5">
+          <div className="still-editor-rail flex min-h-0 flex-1 flex-col pl-3 sm:pl-5">
             <EntryEditor
               value={content}
               onChange={(v) => updateEntryContent(dateKey, v)}
               onBlur={() => void flushSave()}
               placeholder="What’s on your mind today?"
             />
+            <div className="min-h-0 flex-1" aria-hidden />
           </div>
 
           {onThisDay.length > 0 ? (
-            <section className="border-t border-[var(--still-border)] pt-6">
+            <section className="shrink-0 border-t border-[var(--still-border)] pt-6">
               <h2 className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-[var(--still-muted)]">
                 On this day
               </h2>
@@ -122,7 +115,7 @@ export function JournalScreen() {
             </section>
           ) : null}
         </article>
-      </JournalPager>
+      </div>
 
       <CalendarSheet
         key={calendarOpen ? dateKey : 'calendar-idle'}

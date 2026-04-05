@@ -14,7 +14,7 @@ export function AppShell({ children, className }: Props) {
   return (
     <div
       className={cn(
-        'mx-auto flex min-h-dvh w-full max-w-[min(100%,26rem)] flex-col sm:max-w-lg md:max-w-xl',
+        'mx-auto flex min-h-0 w-full max-w-[min(100%,30rem)] flex-1 flex-col sm:max-w-xl md:max-w-2xl',
         'pl-[max(0.875rem,env(safe-area-inset-left,0px))]',
         'pr-[max(0.875rem,env(safe-area-inset-right,0px))]',
         'pt-[max(0.5rem,env(safe-area-inset-top))]',

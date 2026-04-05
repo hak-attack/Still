@@ -113,8 +113,17 @@ html[data-appearance='dark'] body::after {
 
 #root {
   min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   position: relative;
   z-index: 0;
+}
+
+/* Safari < 16.6: no field-sizing — keep a sensible empty height */
+@supports not (field-sizing: content) {
+  .still-editor-textarea {
+    min-height: 8rem;
+  }
 }
 
 /* Page turn: editorial drift */

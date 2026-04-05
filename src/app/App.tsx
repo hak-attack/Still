@@ -22,7 +22,9 @@ function RoutedApp() {
 export default function App() {
   return (
     <AppProvider>
-      <RoutedApp />
+      <div className="flex min-h-dvh min-w-0 flex-1 flex-col overflow-hidden">
+        <RoutedApp />
+      </div>
     </AppProvider>
   )
 }

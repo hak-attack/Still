@@ -1,4 +1,4 @@
-import { formatLongDate, isTodayKey } from '../../lib/date/formatDate'
+import { formatDayMonthYear, formatWeekdayLong, isTodayKey } from '../../lib/date/formatDate'
 import { cn } from '../../lib/utils/cn'
 
 type Props = {
@@ -8,10 +8,13 @@ type Props = {
 
 export function DateHeader({ dateKey, className }: Props) {
   const today = isTodayKey(dateKey)
+  const dmy = formatDayMonthYear(dateKey)
+  const weekday = formatWeekdayLong(dateKey)
+
   return (
     <header
       className={cn(
-        'relative space-y-1.5 border-l-[3px] border-[var(--still-accent)] pl-4 sm:space-y-2 sm:pl-5 md:pl-6',
+        'relative space-y-1 border-l-[3px] border-[var(--still-accent)] pl-4 sm:pl-5 md:pl-6',
         className,
       )}
     >
@@ -20,9 +23,12 @@ export function DateHeader({ dateKey, className }: Props) {
           Today
         </p>
       ) : null}
-      <h1 className="font-[family-name:var(--font-display)] text-[1.75rem] font-medium leading-[1.12] tracking-[-0.02em] text-[var(--still-text)] sm:text-[2rem]">
-        {formatLongDate(dateKey)}
-      </h1>
+      <div className="space-y-0.5">
+        <p className="font-[family-name:var(--font-display)] text-[1.35rem] font-medium leading-tight tracking-[-0.02em] text-[var(--still-text)] sm:text-[1.5rem]">
+          {dmy}
+        </p>
+        <p className="text-[0.95rem] font-medium capitalize text-[var(--still-muted)]">{weekday}</p>
+      </div>
     </header>
   )
 }
