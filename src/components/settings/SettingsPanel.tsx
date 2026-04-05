@@ -7,7 +7,7 @@ import { navigateHash } from '../../app/hashRoute'
 import { useApp } from '../../app/providers'
 
 export function SettingsPanel() {
-  const { lock, exportBackup, importBackup, clearAllData, setTheme, state } = useApp()
+  const { lock, exportBackup, importBackup, clearAllData, setTheme, setAppearance, state } = useApp()
   const fileRef = useRef<HTMLInputElement>(null)
   const [importOpen, setImportOpen] = useState(false)
   const [importText, setImportText] = useState<string | null>(null)
@@ -95,28 +95,52 @@ export function SettingsPanel() {
           <h2 className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--still-muted)]">
             Appearance
           </h2>
+          <p className="text-sm text-[var(--still-muted)]">Light and dark are full palettes. Paper tones apply in light mode.</p>
           <div className="flex flex-wrap gap-2">
             {(
               [
-                { id: 'ivory' as const, label: 'Ivory' },
-                { id: 'stone' as const, label: 'Stone' },
-                { id: 'clay' as const, label: 'Clay' },
+                { id: 'light' as const, label: 'Light' },
+                { id: 'dark' as const, label: 'Dark' },
               ] as const
-            ).map((t) => (
+            ).map((a) => (
               <button
-                key={t.id}
+                key={a.id}
                 type="button"
-                onClick={() => setTheme(t.id)}
+                onClick={() => setAppearance(a.id)}
                 className={`rounded-full border px-4 py-2 text-sm transition-colors ${
-                  state.theme === t.id
-                    ? 'border-[var(--still-accent)] bg-[var(--still-surface)] text-[var(--still-text)]'
+                  state.appearance === a.id
+                    ? 'border-[var(--still-accent)] bg-[var(--still-surface)] text-[var(--still-text)] shadow-[0_0_20px_-8px_var(--still-accent-glow)]'
                     : 'border-[var(--still-border)] text-[var(--still-muted)] hover:border-[var(--still-accent)]/40'
                 }`}
               >
-                {t.label}
+                {a.label}
               </button>
             ))}
           </div>
+          {state.appearance === 'light' ? (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {(
+                [
+                  { id: 'ivory' as const, label: 'Ivory' },
+                  { id: 'stone' as const, label: 'Stone' },
+                  { id: 'clay' as const, label: 'Clay' },
+                ] as const
+              ).map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setTheme(t.id)}
+                  className={`rounded-full border px-3.5 py-1.5 text-xs transition-colors ${
+                    state.theme === t.id
+                      ? 'border-[var(--still-accent)] bg-[var(--still-surface)]/80 text-[var(--still-text)]'
+                      : 'border-[var(--still-border)] text-[var(--still-muted)] hover:border-[var(--still-accent)]/35'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          ) : null}
         </section>
 
         <section className="space-y-3">
@@ -134,7 +158,7 @@ export function SettingsPanel() {
             <Button type="button" variant="subtle" className="w-full justify-center" onClick={() => void lock()}>
               Lock journal
             </Button>
-            <Button type="button" variant="ghost" className="w-full justify-center text-[#8b5a4a]" onClick={requestClear}>
+            <Button type="button" variant="ghost" className="w-full justify-center text-[var(--still-danger)]" onClick={requestClear}>
               Clear data on this device…
             </Button>
           </div>
@@ -202,7 +226,7 @@ export function SettingsPanel() {
             </div>
 
             {importError ? (
-              <p className="mt-3 text-sm text-[#8b5a4a]" role="alert">
+              <p className="mt-3 text-sm text-[var(--still-danger)]" role="alert">
                 {importError}
               </p>
             ) : null}

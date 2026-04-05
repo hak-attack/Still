@@ -20,17 +20,21 @@ export function UnlockForm({ onSubmit, error, busy, hasExistingJournal }: Props)
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-6">
-      <div className="space-y-2 text-center">
-        <h1 className="font-[family-name:var(--font-display)] text-4xl font-medium tracking-tight text-[var(--still-text)]">
+    <form
+      onSubmit={handleSubmit}
+      className="unlock-stagger flex w-full max-w-sm flex-col gap-7 pl-1 sm:max-w-md"
+    >
+      <div className="space-y-3 text-left">
+        <div className="still-diagonal-rule h-px w-16 opacity-80" aria-hidden />
+        <h1 className="still-wordmark text-[2.75rem] leading-[0.95] text-[var(--still-text)] sm:text-[3.25rem]">
           Still
         </h1>
-        <p className="text-[0.95rem] leading-relaxed text-[var(--still-muted)]">
+        <p className="max-w-[14rem] text-[0.95rem] font-medium italic leading-snug text-[var(--still-muted)]">
           Unlock your journal
         </p>
       </div>
 
-      <div className="space-y-3 rounded-[var(--radius-still)] border border-[var(--still-border)] bg-[var(--still-surface)]/50 p-4 text-left text-sm leading-relaxed text-[var(--still-muted)]">
+      <div className="space-y-3 rounded-[var(--radius-still)] border border-[var(--still-border)] bg-[var(--still-surface)]/35 p-4 text-left text-[0.9rem] leading-relaxed text-[var(--still-muted)] backdrop-blur-sm">
         <p>Stored locally on this device. Encrypted in your browser.</p>
         <p>If you forget your passphrase, this journal cannot be recovered.</p>
       </div>
@@ -52,7 +56,7 @@ export function UnlockForm({ onSubmit, error, busy, hasExistingJournal }: Props)
       </div>
 
       {error ? (
-        <p className="text-center text-sm text-[#8b5a4a]" role="alert">
+        <p className="text-left text-sm text-[var(--still-danger)]" role="alert">
           {error}
         </p>
       ) : null}

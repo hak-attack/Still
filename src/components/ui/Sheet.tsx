@@ -25,14 +25,16 @@ export function Sheet({ open, onClose, title, children, className }: Props) {
     <div className="fixed inset-0 z-50 flex flex-col justify-end" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
       <button
         type="button"
-        className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"
+        className="absolute inset-0 backdrop-blur-[3px]"
+        style={{ background: 'var(--still-scrim)' }}
         aria-label="Close"
         onClick={onClose}
       />
       <div
         className={cn(
           'relative max-h-[85dvh] overflow-hidden rounded-t-[var(--radius-still)] border border-[var(--still-border)]',
-          'bg-[var(--still-bg)] shadow-[0_-8px_40px_rgba(0,0,0,0.08)]',
+          'bg-[var(--still-bg)]/95 backdrop-blur-md',
+          'shadow-[var(--still-sheet-shadow)]',
           'animate-[sheetUp_0.3s_ease-out]',
           className,
         )}

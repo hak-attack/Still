@@ -17,7 +17,7 @@ export function EntryEditor({ value, onChange, onBlur, placeholder, className }:
       placeholder={placeholder}
       rows={12}
       className={cn(
-        'min-h-[50dvh] w-full resize-none bg-transparent text-[1.05rem] leading-[1.65] text-[var(--still-text)]',
+        'min-h-[50dvh] w-full resize-none bg-transparent text-[1.08rem] leading-[1.72] text-[var(--still-text)]',
         'placeholder:text-[var(--still-muted)]/70 placeholder:italic',
         'focus:outline-none',
         className,

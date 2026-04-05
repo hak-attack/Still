@@ -97,12 +97,14 @@ export function JournalScreen() {
         >
           <DateHeader dateKey={dateKey} />
 
-          <EntryEditor
-            value={content}
-            onChange={(v) => updateEntryContent(dateKey, v)}
-            onBlur={() => void flushSave()}
-            placeholder="What’s on your mind today?"
-          />
+          <div className="still-editor-rail relative pl-4 sm:pl-6">
+            <EntryEditor
+              value={content}
+              onChange={(v) => updateEntryContent(dateKey, v)}
+              onBlur={() => void flushSave()}
+              placeholder="What’s on your mind today?"
+            />
+          </div>
 
           <div className="flex flex-wrap gap-2 pt-1">
             {PROMPTS.map((p) => (

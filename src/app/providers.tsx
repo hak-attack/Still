@@ -41,6 +41,7 @@ type State = {
   saveStatus: SaveStatus
   unlockError: string | null
   theme: 'ivory' | 'stone' | 'clay'
+  appearance: 'light' | 'dark'
 }
 
 type Action =
@@ -52,6 +53,7 @@ type Action =
   | { type: 'save_status'; status: SaveStatus }
   | { type: 'replace_store'; store: JournalStore }
   | { type: 'set_theme'; theme: State['theme'] }
+  | { type: 'set_appearance'; appearance: State['appearance'] }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -109,9 +111,31 @@ function reducer(state: State, action: Action): State {
       return state.isUnlocked ? { ...state, store: action.store } : state
     case 'set_theme':
       return { ...state, theme: action.theme }
+    case 'set_appearance':
+      return { ...state, appearance: action.appearance }
     default:
       return state
   }
+}
+
+function loadTheme(): State['theme'] {
+  try {
+    const v = localStorage.getItem('still.theme') as State['theme'] | null
+    if (v === 'stone' || v === 'clay' || v === 'ivory') return v
+  } catch {
+    /* ignore */
+  }
+  return 'ivory'
+}
+
+function loadAppearance(): State['appearance'] {
+  try {
+    const v = localStorage.getItem('still.appearance') as State['appearance'] | null
+    if (v === 'dark' || v === 'light') return v
+  } catch {
+    /* ignore */
+  }
+  return 'light'
 }
 
 const initialState = (): State => ({
@@ -120,7 +144,8 @@ const initialState = (): State => ({
   currentDate: todayKey(),
   saveStatus: 'idle',
   unlockError: null,
-  theme: 'ivory',
+  theme: loadTheme(),
+  appearance: loadAppearance(),
 })
 
 type Ctx = {
@@ -139,26 +164,16 @@ type Ctx = {
   importBackup: (text: string, passphrase: string, mode: 'merge' | 'replace') => Promise<void>
   clearAllData: () => Promise<void>
   setTheme: (t: State['theme']) => void
+  setAppearance: (a: State['appearance']) => void
 }
 
 const AppCtx = createContext<Ctx | null>(null)
-
-function loadTheme(): State['theme'] {
-  try {
-    const v = localStorage.getItem('still.theme') as State['theme'] | null
-    if (v === 'stone' || v === 'clay' || v === 'ivory') return v
-  } catch {
-    /* ignore */
-  }
-  return 'ivory'
-}
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, initialState)
   const [hasExistingJournal, setHasExistingJournal] = useState(false)
   const [unlockBusy, setUnlockBusy] = useState(false)
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const themeLoaded = useRef(false)
   const storeRef = useRef<JournalStore | null>(null)
 
   useEffect(() => {
@@ -170,14 +185,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [state.isUnlocked])
 
   useEffect(() => {
-    if (themeLoaded.current) return
-    themeLoaded.current = true
-    const t = loadTheme()
-    dispatch({ type: 'set_theme', theme: t })
-  }, [])
+    document.documentElement.dataset.appearance = state.appearance
+    try {
+      localStorage.setItem('still.appearance', state.appearance)
+    } catch {
+      /* ignore */
+    }
+  }, [state.appearance])
 
   useEffect(() => {
-    if (state.theme === 'ivory') {
+    if (state.appearance === 'dark') {
+      delete document.documentElement.dataset.theme
+    } else if (state.theme === 'ivory') {
       delete document.documentElement.dataset.theme
     } else {
       document.documentElement.dataset.theme = state.theme
@@ -187,7 +206,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } catch {
       /* ignore */
     }
-  }, [state.theme])
+  }, [state.theme, state.appearance])
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (!meta) return
+    if (state.appearance === 'dark') {
+      meta.setAttribute('content', '#0c0a09')
+      return
+    }
+    const colors: Record<State['theme'], string> = {
+      ivory: '#f4f0e6',
+      stone: '#ebe8e0',
+      clay: '#f0e8e2',
+    }
+    meta.setAttribute('content', colors[state.theme])
+  }, [state.appearance, state.theme])
 
   const flushSave = useCallback(async () => {
     if (!state.isUnlocked) return
@@ -343,6 +377,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'set_theme', theme: t })
   }, [])
 
+  const setAppearance = useCallback((a: State['appearance']) => {
+    dispatch({ type: 'set_appearance', appearance: a })
+  }, [])
+
   const value = useMemo<Ctx>(
     () => ({
       state,
@@ -360,6 +398,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       importBackup,
       clearAllData,
       setTheme,
+      setAppearance,
     }),
     [
       state,
@@ -376,6 +415,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       importBackup,
       clearAllData,
       setTheme,
+      setAppearance,
     ],
   )
 
