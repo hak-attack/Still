@@ -22,7 +22,7 @@ export function UnlockForm({ onSubmit, error, busy, hasExistingJournal }: Props)
   return (
     <form
       onSubmit={handleSubmit}
-      className="unlock-stagger flex w-full max-w-sm flex-col gap-7 pl-1 sm:max-w-md"
+      className="unlock-stagger flex w-full flex-col gap-6 sm:max-w-md sm:gap-7"
     >
       <div className="space-y-3 text-left">
         <div className="still-diagonal-rule h-px w-16 opacity-80" aria-hidden />

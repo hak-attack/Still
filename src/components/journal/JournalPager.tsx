@@ -11,12 +11,20 @@ type Props = {
 
 export function JournalPager({ onPrev, onNext, children, className }: Props) {
   return (
-    <div className={cn('flex items-stretch gap-1', className)}>
-      <IconButton label="Previous day" onClick={onPrev} className="shrink-0 self-start">
+    <div className={cn('flex items-stretch gap-0.5 sm:gap-1', className)}>
+      <IconButton
+        label="Previous day"
+        onClick={onPrev}
+        className="h-10 w-10 shrink-0 self-start sm:h-11 sm:w-11"
+      >
         <Chevron dir="left" />
       </IconButton>
       <div className="min-w-0 flex-1 touch-pan-y">{children}</div>
-      <IconButton label="Next day" onClick={onNext} className="shrink-0 self-start">
+      <IconButton
+        label="Next day"
+        onClick={onNext}
+        className="h-10 w-10 shrink-0 self-start sm:h-11 sm:w-11"
+      >
         <Chevron dir="right" />
       </IconButton>
     </div>

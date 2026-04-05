@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { CalendarSheet } from '../components/calendar/CalendarSheet'
 import { DateHeader } from '../components/journal/DateHeader'
 import { EntryEditor } from '../components/journal/EntryEditor'
@@ -8,12 +8,6 @@ import { AppShell } from '../components/layout/AppShell'
 import { IconButton } from '../components/ui/IconButton'
 import { navigateHash } from './hashRoute'
 import { useApp } from './providers'
-
-const PROMPTS = [
-  'What’s on your mind today?',
-  'What felt still?',
-  'One thing worth remembering…',
-]
 
 export function JournalScreen() {
   const {
@@ -47,14 +41,6 @@ export function JournalScreen() {
     return out.slice(0, 3)
   }, [store.entries, dateKey])
 
-  const applyPrompt = useCallback(
-    (p: string) => {
-      const next = content ? `${content}\n\n${p}\n` : `${p}\n`
-      updateEntryContent(dateKey, next)
-    },
-    [content, dateKey, updateEntryContent],
-  )
-
   function onTouchStart(e: React.TouchEvent) {
     const t = e.changedTouches[0]
     if (!t) return
@@ -76,13 +62,21 @@ export function JournalScreen() {
 
   return (
     <AppShell className="relative">
-      <div className="mb-2 flex items-start justify-between gap-2">
+      <div className="mb-1.5 flex items-start justify-between gap-2 sm:mb-2">
         <SaveIndicator status={state.saveStatus} className="pt-1" />
         <div className="flex shrink-0 gap-0.5">
-          <IconButton label="Open calendar" onClick={() => setCalendarOpen(true)}>
+          <IconButton
+            label="Open calendar"
+            onClick={() => setCalendarOpen(true)}
+            className="h-10 w-10 sm:h-11 sm:w-11"
+          >
             <CalendarIcon />
           </IconButton>
-          <IconButton label="Settings" onClick={() => navigateHash('settings')}>
+          <IconButton
+            label="Settings"
+            onClick={() => navigateHash('settings')}
+            className="h-10 w-10 sm:h-11 sm:w-11"
+          >
             <GearIcon />
           </IconButton>
         </div>
@@ -91,32 +85,19 @@ export function JournalScreen() {
       <JournalPager onPrev={() => void goPrevDay()} onNext={() => void goNextDay()}>
         <article
           key={dateKey}
-          className="page-enter space-y-4 pb-8"
+          className="page-enter space-y-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:space-y-6 sm:pb-10"
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
           <DateHeader dateKey={dateKey} />
 
-          <div className="still-editor-rail relative pl-4 sm:pl-6">
+          <div className="still-editor-rail relative pl-3 sm:pl-5">
             <EntryEditor
               value={content}
               onChange={(v) => updateEntryContent(dateKey, v)}
               onBlur={() => void flushSave()}
               placeholder="What’s on your mind today?"
             />
-          </div>
-
-          <div className="flex flex-wrap gap-2 pt-1">
-            {PROMPTS.map((p) => (
-              <button
-                key={p}
-                type="button"
-                onClick={() => applyPrompt(p)}
-                className="rounded-full border border-[var(--still-border)] bg-[var(--still-surface)]/60 px-3 py-1.5 text-left text-xs text-[var(--still-muted)] transition-colors hover:border-[var(--still-accent)]/40 hover:text-[var(--still-text)]"
-              >
-                {p}
-              </button>
-            ))}
           </div>
 
           {onThisDay.length > 0 ? (

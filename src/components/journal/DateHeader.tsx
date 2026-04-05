@@ -11,8 +11,7 @@ export function DateHeader({ dateKey, className }: Props) {
   return (
     <header
       className={cn(
-        'relative space-y-2 border-l-[3px] border-[var(--still-accent)] pl-5 sm:pl-6',
-        '-ml-0.5 sm:-ml-1',
+        'relative space-y-1.5 border-l-[3px] border-[var(--still-accent)] pl-4 sm:space-y-2 sm:pl-5 md:pl-6',
         className,
       )}
     >
